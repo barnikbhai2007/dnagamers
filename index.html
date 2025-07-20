@@ -8,6 +8,37 @@
 <audio id="bg-music" loop></audio>
 <audio id="click-sound" src="click.mp3"></audio>
 
+        // Add music playlist and sound effects
+const musicTracks = [
+    "music/track1.mp3",
+    "music/track2.mp3",
+    "music/track3.mp3",
+    "music/track4.mp3",
+    "music/track5.mp3"
+];
+
+let currentTrackIndex = -1;
+const bgMusic = document.getElementById('bg-music');
+const clickSound = document.getElementById('click-sound');
+
+// Music toggle button logic
+musicToggle.addEventListener('click', function () {
+    currentTrackIndex = (currentTrackIndex + 1) % musicTracks.length;
+    bgMusic.src = musicTracks[currentTrackIndex];
+    bgMusic.play().catch(err => {
+        console.log("User interaction needed to play audio:", err);
+    });
+});
+
+// Play click sound on every button
+document.querySelectorAll('button').forEach(btn => {
+    btn.addEventListener('click', () => {
+        clickSound.currentTime = 0;
+        clickSound.play().catch(() => {}); // Avoid console error on autoplay block
+    });
+});
+
+
     </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
