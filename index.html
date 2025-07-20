@@ -1,0 +1,1232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ultimate PC Game Battle</title>
+    <script src="https://cdn.tailwindcss.com"> 
+<audio id="bg-music" loop></audio>
+<audio id="click-sound" src="click.mp3"></audio>
+
+    </script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700;800;900&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@300;400;500;600;700&display=swap');
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #0f0f23;
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%238b5cf6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolygon points='5 3 19 12 5 21 5 3'%3E%3C/polygon%3E%3C/svg%3E"), auto;
+        }
+        
+        .futuristic-font {
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .secondary-font {
+            font-family: 'Rajdhani', sans-serif;
+        }
+        
+        .game-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn {
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(99, 102, 241, 0.4);
+        }
+        
+        .btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 5px;
+            height: 5px;
+            background: rgba(255, 255, 255, 0.5);
+            opacity: 0;
+            border-radius: 100%;
+            transform: scale(1, 1) translate(-50%, -50%);
+            transform-origin: 50% 50%;
+        }
+        
+        .btn:focus:not(:active)::after {
+            animation: ripple 1s ease-out;
+        }
+        
+        @keyframes ripple {
+            0% {
+                transform: scale(0, 0);
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(20, 20);
+                opacity: 0;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        .slide-in {
+            animation: slideIn 0.5s ease-out;
+        }
+        
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(99, 102, 241, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(99, 102, 241, 0); }
+        }
+        
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: fall 3s ease-in infinite;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        @keyframes fall {
+            0% { transform: translateY(-100px) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(360deg); opacity: 0; }
+        }
+
+        .progress-bar {
+            height: 10px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #6366f1, #8b5cf6);
+            transition: width 0.5s ease;
+        }
+        
+        .game-image {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-image::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, rgba(0,0,0,0) 0%, rgba(0,0,0,0.7) 100%);
+            z-index: 1;
+        }
+        
+        .glow-border {
+            box-shadow: 0 0 15px rgba(99, 102, 241, 0.7);
+            animation: glow 2s infinite alternate;
+        }
+        
+        @keyframes glow {
+            from { box-shadow: 0 0 15px rgba(99, 102, 241, 0.7); }
+            to { box-shadow: 0 0 25px rgba(139, 92, 246, 0.9); }
+        }
+        
+        .dna-helix {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.1;
+            z-index: -1;
+            background-image: repeating-linear-gradient(45deg, 
+                rgba(99, 102, 241, 0.1) 0px, 
+                rgba(99, 102, 241, 0.1) 2px, 
+                transparent 2px, 
+                transparent 10px);
+        }
+        
+        .circuit-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.05;
+            z-index: -1;
+            background-image: 
+                linear-gradient(to right, rgba(99, 102, 241, 0.5) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(99, 102, 241, 0.5) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        
+        .hexagon {
+            clip-path: polygon(25% 0%, 75% 0%, 100% 50%, 75% 100%, 25% 100%, 0% 50%);
+        }
+        
+        .scan-line {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, rgba(99, 102, 241, 0.8), transparent);
+            animation: scan 3s linear infinite;
+            z-index: 2;
+            pointer-events: none;
+        }
+        
+        @keyframes scan {
+            0% { top: 0; }
+            100% { top: 100%; }
+        }
+        
+        /* Futuristic background */
+        .cyber-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: 
+                radial-gradient(circle at 50% 50%, rgba(17, 24, 39, 1), rgba(10, 10, 30, 1)),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%236366f1' fill-opacity='0.05'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        .grid-lines {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: 
+                linear-gradient(to right, rgba(99, 102, 241, 0.05) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(99, 102, 241, 0.05) 1px, transparent 1px);
+            background-size: 50px 50px;
+            transform: perspective(500px) rotateX(60deg);
+            transform-origin: center top;
+            opacity: 0.3;
+        }
+        
+        .cyber-particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+        
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background-color: rgba(99, 102, 241, 0.7);
+            border-radius: 50%;
+            animation: float 15s linear infinite;
+            pointer-events: none;
+        }
+        
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+        
+        /* Click effect */
+        .click-ripple {
+            position: absolute;
+            border-radius: 50%;
+            background-color: rgba(139, 92, 246, 0.4);
+            transform: scale(0);
+            animation: clickRipple 0.6s linear;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        @keyframes clickRipple {
+            0% {
+                transform: scale(0);
+                opacity: 0.8;
+            }
+            100% {
+                transform: scale(10);
+                opacity: 0;
+            }
+        }
+        
+        /* Footer */
+        .footer {
+            background: linear-gradient(90deg, rgba(17, 24, 39, 0.8), rgba(10, 10, 30, 0.8));
+            backdrop-filter: blur(5px);
+            border-top: 1px solid rgba(99, 102, 241, 0.3);
+        }
+        
+        .heart {
+            display: inline-block;
+            animation: heartbeat 1.5s infinite;
+            color: #ef4444;
+        }
+        
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
+            75% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .india-flag {
+            display: inline-block;
+            margin-left: 5px;
+        }
+        
+        /* Holographic effect */
+        .holographic {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .holographic::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, 
+                rgba(255,255,255,0) 0%, 
+                rgba(255,255,255,0.05) 25%, 
+                rgba(255,255,255,0.1) 50%, 
+                rgba(255,255,255,0.05) 75%, 
+                rgba(255,255,255,0) 100%);
+            animation: holographicShine 3s linear infinite;
+            pointer-events: none;
+            z-index: 2;
+        }
+        
+        @keyframes holographicShine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Click effect particles */
+        .click-particle {
+            position: absolute;
+            background: radial-gradient(circle, #8b5cf6 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0;
+            transform: translate(-50%, -50%);
+        }
+        
+        @keyframes particleAnimation {
+            0% {
+                transform: translate(-50%, -50%) scale(0);
+                opacity: 0.8;
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 0;
+            }
+        }
+        
+        /* Game card placeholder images */
+        .game-placeholder {
+            background: linear-gradient(135deg, #1f2937 25%, #111827 25%, #111827 50%, #1f2937 50%, #1f2937 75%, #111827 75%, #111827 100%);
+            background-size: 20px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .game-placeholder::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            animation: shine 2s infinite;
+        }
+        
+        @keyframes shine {
+            0% { left: -100%; }
+            100% { left: 150%; }
+        }
+        
+        /* Futuristic elements */
+        .tech-circle {
+            position: absolute;
+            border-radius: 50%;
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            opacity: 0.5;
+            pointer-events: none;
+        }
+        
+        .tech-circle-1 {
+            width: 300px;
+            height: 300px;
+            top: -150px;
+            left: -150px;
+            border-width: 2px;
+            animation: rotate 20s linear infinite;
+        }
+        
+        .tech-circle-2 {
+            width: 500px;
+            height: 500px;
+            bottom: -250px;
+            right: -250px;
+            border-width: 1px;
+            animation: rotate 30s linear infinite reverse;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Neon glow */
+        .neon-text {
+            text-shadow: 0 0 5px rgba(99, 102, 241, 0.8), 
+                         0 0 10px rgba(99, 102, 241, 0.5), 
+                         0 0 15px rgba(99, 102, 241, 0.3);
+        }
+        
+        /* Futuristic loader */
+        .loader {
+            width: 48px;
+            height: 48px;
+            border: 3px solid rgba(99, 102, 241, 0.3);
+            border-radius: 50%;
+            display: inline-block;
+            position: relative;
+            box-sizing: border-box;
+            animation: rotation 1s linear infinite;
+        }
+        
+        .loader::after {
+            content: '';  
+            box-sizing: border-box;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 3px solid transparent;
+            border-bottom-color: #8b5cf6;
+        }
+        
+        @keyframes rotation {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Enhanced visual click effect */
+        .visual-click {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.8) 0%, rgba(139, 92, 246, 0) 70%);
+            transform: translate(-50%, -50%) scale(0);
+            animation: visualClick 0.5s ease-out forwards;
+            pointer-events: none;
+            z-index: 9999;
+        }
+        
+        @keyframes visualClick {
+            0% { transform: translate(-50%, -50%) scale(0); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(2); opacity: 0; }
+        }
+        
+        /* Equalizer animation (visual music representation) */
+        .equalizer {
+            position: fixed;
+            bottom: 60px;
+            right: 20px;
+            display: flex;
+            align-items: flex-end;
+            height: 30px;
+            gap: 3px;
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+        .equalizer-bar {
+            width: 4px;
+            background: linear-gradient(to top, #6366f1, #8b5cf6);
+            border-radius: 2px;
+        }
+        
+        @keyframes equalize1 { 0%, 100% { height: 10px; } 50% { height: 25px; } }
+        @keyframes equalize2 { 0%, 100% { height: 20px; } 50% { height: 5px; } }
+        @keyframes equalize3 { 0%, 100% { height: 15px; } 50% { height: 30px; } }
+        @keyframes equalize4 { 0%, 100% { height: 5px; } 50% { height: 20px; } }
+        @keyframes equalize5 { 0%, 100% { height: 25px; } 50% { height: 10px; } }
+        
+        .eq1 { animation: equalize1 0.8s ease-in-out infinite; }
+        .eq2 { animation: equalize2 1.0s ease-in-out infinite; }
+        .eq3 { animation: equalize3 0.7s ease-in-out infinite; }
+        .eq4 { animation: equalize4 0.9s ease-in-out infinite; }
+        .eq5 { animation: equalize5 1.1s ease-in-out infinite; }
+        
+        /* Music control button */
+        .music-control {
+            position: fixed;
+            bottom: 60px;
+            left: 20px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid rgba(99, 102, 241, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .music-control:hover {
+            background: rgba(99, 102, 241, 0.4);
+            transform: scale(1.1);
+        }
+        
+        .music-control svg {
+            width: 20px;
+            height: 20px;
+            fill: #fff;
+        }
+        
+        /* Game card hover effect */
+        .game-card .game-image {
+            transition: transform 0.5s ease;
+        }
+        
+        .game-card:hover .game-image {
+            transform: scale(1.05);
+        }
+        
+        /* Enhanced button effects */
+        .btn {
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+    </style>
+</head>
+<body class="text-white">
+    <!-- Futuristic Background Elements -->
+    <div class="cyber-bg"></div>
+    <div class="grid-lines"></div>
+    <div class="cyber-particles" id="particles"></div>
+    <div class="scan-line"></div>
+    
+    <!-- Futuristic decorative elements -->
+    <div class="tech-circle tech-circle-1"></div>
+    <div class="tech-circle tech-circle-2"></div>
+    
+    <!-- Visual music equalizer (since we can't add actual audio) -->
+    <div class="equalizer">
+        <div class="equalizer-bar eq1"></div>
+        <div class="equalizer-bar eq2"></div>
+        <div class="equalizer-bar eq3"></div>
+        <div class="equalizer-bar eq4"></div>
+        <div class="equalizer-bar eq5"></div>
+    </div>
+    
+    <!-- Music control button (visual only) -->
+    <div class="music-control" id="music-toggle">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M9 18V6l11 6-11 6zm-6-3H2v-2h1v2zm3-3H5v2h1v-2zm-1-2h1V8H5v2zm3-3H7v2h1V7zm-1-2h1V3H7v2z"/>
+        </svg>
+    </div>
+    
+    <div id="app" class="container mx-auto px-4 py-8 max-w-6xl relative">
+        <!-- Home Screen -->
+        <div id="home-screen" class="flex flex-col items-center justify-center min-h-[80vh] fade-in">
+            <h1 class="text-4xl md:text-6xl font-bold text-center mb-6 neon-text futuristic-font">ULTIMATE PC GAME BATTLE</h1>
+            <p class="text-lg md:text-xl text-center mb-12 max-w-2xl text-gray-300 secondary-font">Discover your ultimate favorite PC game through exciting head-to-head battles. Your chosen game moves forward to face the next challenger!</p>
+            <button id="start-button" class="btn bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white font-bold py-4 px-8 rounded-lg text-xl shadow-lg futuristic-font holographic">
+                START BATTLE
+            </button>
+        </div>
+
+        <!-- Game Battle Screen -->
+        <div id="battle-screen" class="hidden fade-in">
+            <div class="text-center mb-6">
+                <h2 class="text-2xl md:text-3xl font-bold mb-2 futuristic-font neon-text">Battle <span id="current-battle">1</span> of <span id="total-battles">99</span></h2>
+                <p class="text-gray-300 mb-4 secondary-font">Choose your favorite game</p>
+                <div class="progress-bar w-full max-w-xl mx-auto mb-2">
+                    <div id="progress-fill" class="progress-fill" style="width: 0%"></div>
+                </div>
+                <p class="text-sm text-gray-400 secondary-font">Games remaining: <span id="games-remaining">99</span></p>
+            </div>
+            
+            <div class="flex flex-col md:flex-row justify-center items-center gap-6 md:gap-12 my-8">
+                <div id="champion-card" class="game-card bg-gray-800 bg-opacity-70 rounded-xl overflow-hidden shadow-lg w-full md:w-96 slide-in border-2 border-indigo-500 holographic">
+                    <div class="h-56 bg-gray-700 flex items-center justify-center overflow-hidden">
+                        <div class="game-image game-placeholder w-full h-full bg-center bg-cover"></div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="game-title text-xl font-bold futuristic-font">Current Champion</h3>
+                            <span class="bg-indigo-500 text-white text-xs font-bold px-2 py-1 rounded futuristic-font">CHAMPION</span>
+                        </div>
+                        <button class="choose-btn btn w-full bg-blue-600 hover:bg-blue-700 py-3 px-4 rounded-lg font-medium futuristic-font" data-index="0">
+                            Choose This Game
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="text-3xl font-bold my-4 md:my-0 futuristic-font text-indigo-400 neon-text">VS</div>
+                
+                <div id="challenger-card" class="game-card bg-gray-800 bg-opacity-70 rounded-xl overflow-hidden shadow-lg w-full md:w-96 slide-in holographic">
+                    <div class="h-56 bg-gray-700 flex items-center justify-center overflow-hidden">
+                        <div class="game-image game-placeholder w-full h-full bg-center bg-cover"></div>
+                    </div>
+                    <div class="p-5">
+                        <div class="flex justify-between items-center mb-3">
+                            <h3 class="game-title text-xl font-bold futuristic-font">Challenger</h3>
+                            <span class="bg-purple-500 text-white text-xs font-bold px-2 py-1 rounded futuristic-font">CHALLENGER</span>
+                        </div>
+                        <button class="choose-btn btn w-full bg-blue-600 hover:bg-blue-700 py-3 px-4 rounded-lg font-medium futuristic-font" data-index="1">
+                            Choose This Game
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Futuristic DNA Analysis Result Screen -->
+        <div id="result-screen" class="hidden fade-in relative">
+            <div class="circuit-pattern"></div>
+            <div class="dna-helix"></div>
+            
+            <div class="flex flex-col items-center justify-center min-h-[80vh] py-8 relative z-10">
+                <!-- Glowing Header -->
+                <div class="text-center mb-8">
+                    <h2 class="text-4xl md:text-5xl font-bold futuristic-font neon-text bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500 mb-2">GAMER DNA ANALYSIS</h2>
+                    <div class="w-40 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto"></div>
+                </div>
+                
+                <!-- Winner Card with Hexagon Accents -->
+                <div class="relative mb-8">
+                    <div class="absolute -top-4 -left-4 w-8 h-8 border-t-2 border-l-2 border-blue-500"></div>
+                    <div class="absolute -top-4 -right-4 w-8 h-8 border-t-2 border-r-2 border-purple-500"></div>
+                    <div class="absolute -bottom-4 -left-4 w-8 h-8 border-b-2 border-l-2 border-blue-500"></div>
+                    <div class="absolute -bottom-4 -right-4 w-8 h-8 border-b-2 border-r-2 border-purple-500"></div>
+                    
+                    <div id="winner-card" class="game-card bg-gray-800 bg-opacity-70 rounded-xl overflow-hidden shadow-lg w-full max-w-md slide-in glow-border holographic">
+                        <div class="h-64 bg-gray-700 flex items-center justify-center overflow-hidden">
+                            <div class="winner-image game-placeholder w-full h-full bg-center bg-cover"></div>
+                        </div>
+                        <div class="p-6">
+                            <h3 class="winner-title text-2xl font-bold text-center futuristic-font neon-text">Game Title</h3>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Gamer Type Analysis -->
+                <div class="bg-gray-900 bg-opacity-70 p-6 rounded-xl max-w-2xl mx-auto mb-8 border border-indigo-500 glow-border holographic">
+                    <h3 class="text-2xl font-bold mb-4 text-center futuristic-font text-indigo-400">YOU ARE A <span id="gamer-type" class="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">STRATEGIC MASTERMIND</span></h3>
+                    
+                    <p id="gamer-description" class="text-gray-300 text-center mb-4 secondary-font">Your gaming DNA reveals a preference for deep strategic thinking and complex problem-solving. You enjoy games that challenge your intellect and reward careful planning. Your patience and analytical skills make you excel at games that others might find too demanding.</p>
+                    
+                    <!-- DNA Visualization -->
+                    <div class="flex justify-center items-center gap-1 my-4">
+                        <div class="h-4 w-2 bg-blue-500 rounded-full"></div>
+                        <div class="h-6 w-2 bg-purple-500 rounded-full"></div>
+                        <div class="h-8 w-2 bg-indigo-500 rounded-full"></div>
+                        <div class="h-10 w-2 bg-blue-500 rounded-full"></div>
+                        <div class="h-8 w-2 bg-purple-500 rounded-full"></div>
+                        <div class="h-6 w-2 bg-indigo-500 rounded-full"></div>
+                        <div class="h-4 w-2 bg-blue-500 rounded-full"></div>
+                        <div class="h-6 w-2 bg-purple-500 rounded-full"></div>
+                        <div class="h-8 w-2 bg-indigo-500 rounded-full"></div>
+                        <div class="h-10 w-2 bg-blue-500 rounded-full"></div>
+                        <div class="h-8 w-2 bg-purple-500 rounded-full"></div>
+                        <div class="h-6 w-2 bg-indigo-500 rounded-full"></div>
+                        <div class="h-4 w-2 bg-blue-500 rounded-full"></div>
+                    </div>
+                    
+                    <!-- Stats -->
+                    <div class="grid grid-cols-3 gap-4 mt-6">
+                        <div class="text-center">
+                            <div class="text-sm text-gray-400 futuristic-font">STRATEGY</div>
+                            <div class="w-full bg-gray-700 h-2 rounded-full mt-1">
+                                <div id="stat-strategy" class="bg-blue-500 h-full rounded-full" style="width: 85%"></div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-sm text-gray-400 futuristic-font">ACTION</div>
+                            <div class="w-full bg-gray-700 h-2 rounded-full mt-1">
+                                <div id="stat-action" class="bg-purple-500 h-full rounded-full" style="width: 45%"></div>
+                            </div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-sm text-gray-400 futuristic-font">STORY</div>
+                            <div class="w-full bg-gray-700 h-2 rounded-full mt-1">
+                                <div id="stat-story" class="bg-indigo-500 h-full rounded-full" style="width: 70%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="flex gap-4">
+                    <button id="restart-button" class="btn bg-gradient-to-r from-blue-600 to-blue-800 hover:from-blue-700 hover:to-blue-900 text-white font-bold py-3 px-8 rounded-lg text-lg shadow-lg futuristic-font border border-blue-400 holographic">
+                        RESTART
+                    </button>
+                    <button id="share-button" class="btn bg-gradient-to-r from-purple-600 to-purple-800 hover:from-purple-700 hover:to-purple-900 text-white font-bold py-3 px-8 rounded-lg text-lg shadow-lg futuristic-font border border-purple-400 holographic">
+                        SHARE RESULT
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <footer class="footer fixed bottom-0 left-0 w-full py-3 px-4 text-center text-sm text-gray-400 z-10">
+            <p class="secondary-font">
+                Made with <span class="heart">❤</span> by Barnik Bhai in 
+                <span class="india-flag">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="16" viewBox="0 0 24 16" class="inline-block">
+                        <rect width="24" height="5" fill="#FF9933"/>
+                        <rect y="5" width="24" height="6" fill="#FFFFFF"/>
+                        <rect y="11" width="24" height="5" fill="#138808"/>
+                        <circle cx="12" cy="8" r="1.5" fill="#000080"/>
+                    </svg>
+                </span> 
+                INDIA
+            </p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Game data - all 100 games
+            const games = [
+                "Half-Life 2",
+                "The Witcher 3: Wild Hunt",
+                "Elden Ring",
+                "Red Dead Redemption 2",
+                "Minecraft: Java Edition",
+                "Portal 2",
+                "The Elder Scrolls V: Skyrim",
+                "Counter-Strike: Global Offensive (CS:GO)",
+                "Disco Elysium",
+                "Baldur's Gate 3",
+                "Doom Eternal",
+                "BioShock Infinite",
+                "Cyberpunk 2077 (after updates)",
+                "Dark Souls III",
+                "Mass Effect 2",
+                "Grand Theft Auto V (PC Port)",
+                "StarCraft II",
+                "Total War: Shogun 2",
+                "Divinity: Original Sin 2",
+                "Telltale's The Walking Dead (Season 1)",
+                "Stalker: Shadow of Chernobyl",
+                "Life is Strange",
+                "Age of Empires II: Definitive Edition",
+                "Civilization VI",
+                "Dota 2",
+                "League of Legends",
+                "Fallout: New Vegas",
+                "Metro Exodus",
+                "Terraria",
+                "Outer Wilds",
+                "Return of the Obra Dinn",
+                "Firewatch",
+                "Crusader Kings III",
+                "Dragon Age: Origins",
+                "Hades",
+                "Hollow Knight",
+                "FTL: Faster Than Light",
+                "Papers, Please",
+                "Slay the Spire",
+                "Cities: Skylines",
+                "Garry's Mod",
+                "Rust",
+                "Phasmophobia",
+                "Valheim",
+                "Undertale",
+                "Portal (original)",
+                "Titanfall 2",
+                "Ori and the Will of the Wisps",
+                "The Stanley Parable",
+                "Alan Wake II",
+                "Assassin's Creed IV: Black Flag",
+                "Batman: Arkham City",
+                "Control",
+                "Watch Dogs 2",
+                "Far Cry 3",
+                "Just Cause 3",
+                "Sleeping Dogs",
+                "Shadow of the Tomb Raider",
+                "Middle-earth: Shadow of Mordor",
+                "Death Stranding",
+                "Sekiro: Shadows Die Twice",
+                "GreedFall",
+                "Pillars of Eternity",
+                "Path of Exile",
+                "Vampire: The Masquerade – Bloodlines",
+                "Mount & Blade: Warband",
+                "Kingdom Come: Deliverance",
+                "Nioh 2",
+                "The Outer Worlds",
+                "Planescape: Torment",
+                "Hearts of Iron IV",
+                "XCOM 2",
+                "Frostpunk",
+                "RimWorld",
+                "Oxygen Not Included",
+                "Anno 1800",
+                "Warcraft III: Reforged",
+                "Company of Heroes 2",
+                "Banished",
+                "Prison Architect",
+                "Team Fortress 2",
+                "Left 4 Dead 2",
+                "Portal Reloaded",
+                "Among Us",
+                "Fall Guys",
+                "Don't Starve Together",
+                "ARK: Survival Evolved",
+                "The Forest",
+                "Project Zomboid",
+                "Sea of Thieves",
+                "Stanley Parable: Ultra Deluxe",
+                "Celeste",
+                "INSIDE",
+                "Braid",
+                "Hyper Light Drifter",
+                "Katana ZERO",
+                "Oxenfree",
+                "The Witness",
+                "Kentucky Route Zero",
+                "Brothers: A Tale of Two Sons"
+            ];
+            
+            // Game categories for analysis
+            const gameCategories = {
+                action: ["Half-Life 2", "Doom Eternal", "Titanfall 2", "Assassin's Creed IV: Black Flag", "Batman: Arkham City", "Control", "Watch Dogs 2", "Far Cry 3", "Just Cause 3", "Sleeping Dogs", "Shadow of the Tomb Raider", "Middle-earth: Shadow of Mordor", "Death Stranding", "Sekiro: Shadows Die Twice", "Nioh 2"],
+                rpg: ["The Witcher 3: Wild Hunt", "Elden Ring", "The Elder Scrolls V: Skyrim", "Disco Elysium", "Baldur's Gate 3", "Cyberpunk 2077 (after updates)", "Dark Souls III", "Mass Effect 2", "Divinity: Original Sin 2", "Dragon Age: Origins", "GreedFall", "Pillars of Eternity", "Path of Exile", "Vampire: The Masquerade – Bloodlines", "Mount & Blade: Warband", "Kingdom Come: Deliverance", "The Outer Worlds", "Planescape: Torment"],
+                strategy: ["StarCraft II", "Total War: Shogun 2", "Age of Empires II: Definitive Edition", "Civilization VI", "Crusader Kings III", "FTL: Faster Than Light", "Slay the Spire", "Cities: Skylines", "Hearts of Iron IV", "XCOM 2", "Frostpunk", "RimWorld", "Oxygen Not Included", "Anno 1800", "Warcraft III: Reforged", "Company of Heroes 2", "Banished", "Prison Architect"],
+                multiplayer: ["Minecraft: Java Edition", "Counter-Strike: Global Offensive (CS:GO)", "Dota 2", "League of Legends", "Garry's Mod", "Rust", "Phasmophobia", "Valheim", "Team Fortress 2", "Left 4 Dead 2", "Portal Reloaded", "Among Us", "Fall Guys", "Don't Starve Together", "ARK: Survival Evolved", "The Forest", "Project Zomboid", "Sea of Thieves"],
+                adventure: ["Red Dead Redemption 2", "Portal 2", "BioShock Infinite", "Grand Theft Auto V (PC Port)", "Telltale's The Walking Dead (Season 1)", "Stalker: Shadow of Chernobyl", "Life is Strange", "Metro Exodus", "Terraria", "Outer Wilds", "Return of the Obra Dinn", "Firewatch", "Hades", "Hollow Knight", "Papers, Please", "Undertale", "Portal (original)", "Ori and the Will of the Wisps", "The Stanley Parable", "Alan Wake II", "Stanley Parable: Ultra Deluxe", "Celeste", "INSIDE", "Braid", "Hyper Light Drifter", "Katana ZERO", "Oxenfree", "The Witness", "Kentucky Route Zero", "Brothers: A Tale of Two Sons"]
+            };
+            
+            // Gamer types based on game preferences
+            const gamerTypes = [
+                {
+                    type: "ACTION MASTER",
+                    description: "You thrive on adrenaline and quick reflexes. Your gaming DNA shows a preference for fast-paced action and combat-oriented experiences. You excel at making split-second decisions and executing complex maneuvers under pressure.",
+                    stats: { strategy: 40, action: 95, story: 65 }
+                },
+                {
+                    type: "ROLE-PLAYING ENTHUSIAST",
+                    description: "Your gaming DNA reveals a deep appreciation for immersive worlds and character development. You enjoy stepping into different roles and making meaningful choices that impact the narrative. Your patience and investment in storylines sets you apart.",
+                    stats: { strategy: 70, action: 60, story: 90 }
+                },
+                {
+                    type: "STRATEGIC MASTERMIND",
+                    description: "Your gaming DNA reveals a preference for deep strategic thinking and complex problem-solving. You enjoy games that challenge your intellect and reward careful planning. Your patience and analytical skills make you excel at games that others might find too demanding.",
+                    stats: { strategy: 95, action: 45, story: 70 }
+                },
+                {
+                    type: "SOCIAL GAMER",
+                    description: "Your gaming DNA shows you value shared experiences and teamwork. Whether cooperating or competing, you thrive when interacting with others. You're adaptable and quick to learn new mechanics, making you a valuable teammate in any gaming scenario.",
+                    stats: { strategy: 65, action: 75, story: 60 }
+                },
+                {
+                    type: "ARTISTIC EXPLORER",
+                    description: "Your gaming DNA highlights your appreciation for artistic expression and unique experiences. You're drawn to games that push boundaries in storytelling, visual design, or gameplay mechanics. You value creativity and emotional resonance in your gaming experiences.",
+                    stats: { strategy: 60, action: 50, story: 95 }
+                }
+            ];
+            
+            // Game state
+            let remainingGames = [...games];
+            let currentChampion = null;
+            let battleCount = 0;
+            let totalBattles = games.length - 1;
+            let musicPlaying = false;
+            
+            // DOM elements
+            const homeScreen = document.getElementById('home-screen');
+            const battleScreen = document.getElementById('battle-screen');
+            const resultScreen = document.getElementById('result-screen');
+            const startButton = document.getElementById('start-button');
+            const restartButton = document.getElementById('restart-button');
+            const shareButton = document.getElementById('share-button');
+            const currentBattleEl = document.getElementById('current-battle');
+            const totalBattlesEl = document.getElementById('total-battles');
+            const gamesRemainingEl = document.getElementById('games-remaining');
+            const progressFill = document.getElementById('progress-fill');
+            const musicToggle = document.getElementById('music-toggle');
+            
+            // Initialize particles
+            function createParticles() {
+                const particlesContainer = document.getElementById('particles');
+                for (let i = 0; i < 50; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('particle');
+                    particle.style.left = `${Math.random() * 100}%`;
+                    particle.style.animationDelay = `${Math.random() * 15}s`;
+                    particle.style.animationDuration = `${15 + Math.random() * 10}s`;
+                    particlesContainer.appendChild(particle);
+                }
+            }
+            
+            // Click effect
+            document.addEventListener('click', function(e) {
+                // Create ripple effect
+                const ripple = document.createElement('div');
+                ripple.classList.add('click-ripple');
+                ripple.style.left = `${e.pageX}px`;
+                ripple.style.top = `${e.pageY}px`;
+                document.body.appendChild(ripple);
+                
+                // Create visual click effect (since we can't add actual sound)
+                const visualClick = document.createElement('div');
+                visualClick.classList.add('visual-click');
+                visualClick.style.left = `${e.pageX}px`;
+                visualClick.style.top = `${e.pageY}px`;
+                document.body.appendChild(visualClick);
+                
+                // Create particles
+                const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#3b82f6', '#10b981'];
+                for (let i = 0; i < 8; i++) {
+                    const particle = document.createElement('div');
+                    particle.classList.add('click-particle');
+                    particle.style.width = `${Math.random() * 10 + 5}px`;
+                    particle.style.height = particle.style.width;
+                    particle.style.left = `${e.pageX}px`;
+                    particle.style.top = `${e.pageY}px`;
+                    particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    particle.style.animation = `particleAnimation ${Math.random() * 0.6 + 0.4}s forwards`;
+                    document.body.appendChild(particle);
+                    
+                    // Random direction
+                    const angle = Math.random() * Math.PI * 2;
+                    const distance = Math.random() * 100 + 50;
+                    const x = Math.cos(angle) * distance;
+                    const y = Math.sin(angle) * distance;
+                    
+                    setTimeout(() => {
+                        particle.style.transform = `translate(${x}px, ${y}px) scale(${Math.random() * 0.5 + 0.5})`;
+                        particle.style.opacity = '0';
+                    }, 10);
+                    
+                    // Remove particle after animation
+                    setTimeout(() => {
+                        particle.remove();
+                    }, 1000);
+                }
+                
+                // Remove ripple after animation
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+                
+                // Remove visual click after animation
+                setTimeout(() => {
+                    visualClick.remove();
+                }, 500);
+            });
+            
+            // Toggle music (visual only since we can't add actual audio)
+            musicToggle.addEventListener('click', function() {
+                musicPlaying = !musicPlaying;
+                
+                if (musicPlaying) {
+                    musicToggle.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.84-5 6.7v2.07c4.01-.91 7-4.49 7-8.77 0-4.28-2.99-7.86-7-8.77zm-4 0c-4.01.91-7 4.49-7 8.77 0 4.28 2.99 7.86 7 8.77v-2.07c-2.89-.86-5-3.54-5-6.7s2.11-5.85 5-6.71V3.23zm4 6.8v3.94h-4V10l4 .03z"/>
+                        </svg>
+                    `;
+                    musicToggle.classList.add('pulse');
+                } else {
+                    musicToggle.innerHTML = `
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M9 18V6l11 6-11 6zm-6-3H2v-2h1v2zm3-3H5v2h1v-2zm-1-2h1V8H5v2zm3-3H7v2h1V7zm-1-2h1V3H7v2z"/>
+                        </svg>
+                    `;
+                    musicToggle.classList.remove('pulse');
+                }
+            });
+            
+            // Start battle
+            function startBattle() {
+                homeScreen.classList.add('hidden');
+                battleScreen.classList.remove('hidden');
+                
+                // Set up first battle
+                if (!currentChampion) {
+                    // First two games
+                    currentChampion = remainingGames.shift();
+                }
+                
+                const challenger = remainingGames.shift();
+                updateBattleUI(currentChampion, challenger);
+            }
+            
+            // Update battle UI
+            function updateBattleUI(champion, challenger) {
+                battleCount++;
+                currentBattleEl.textContent = battleCount;
+                totalBattlesEl.textContent = totalBattles;
+                gamesRemainingEl.textContent = remainingGames.length;
+                
+                // Update progress bar
+                const progress = (battleCount / totalBattles) * 100;
+                progressFill.style.width = `${progress}%`;
+                
+                // Update game cards
+                const championCard = document.querySelector('#champion-card .game-title');
+                const challengerCard = document.querySelector('#challenger-card .game-title');
+                
+                championCard.textContent = champion;
+                challengerCard.textContent = challenger;
+                
+                // Add game-specific styling (could be expanded with actual game images)
+                const championImage = document.querySelector('#champion-card .game-image');
+                const challengerImage = document.querySelector('#challenger-card .game-image');
+                
+                // Generate pseudo-random colors based on game names
+                championImage.style.background = generateGameBackground(champion);
+                challengerImage.style.background = generateGameBackground(challenger);
+            }
+            
+            // Generate a pseudo-random background for games
+            function generateGameBackground(gameName) {
+                // Simple hash function to get consistent colors for the same game
+                let hash = 0;
+                for (let i = 0; i < gameName.length; i++) {
+                    hash = gameName.charCodeAt(i) + ((hash << 5) - hash);
+                }
+                
+                // Generate colors
+                const h = Math.abs(hash % 360);
+                const s = 70 + (hash % 20);
+                const l = 20 + (hash % 15);
+                
+                // Create gradient
+                return `linear-gradient(135deg, hsl(${h}, ${s}%, ${l}%), hsl(${(h + 30) % 360}, ${s}%, ${l - 10}%))`;
+            }
+            
+            // Choose winner
+            function chooseWinner(index) {
+                const winner = index === 0 ? currentChampion : document.querySelector('#challenger-card .game-title').textContent;
+                
+                // Update champion
+                currentChampion = winner;
+                
+                // Check if battle is over
+                if (remainingGames.length === 0) {
+                    showResult(winner);
+                } else {
+                    startBattle();
+                }
+            }
+            
+            // Show result
+            function showResult(winner) {
+                battleScreen.classList.add('hidden');
+                resultScreen.classList.remove('hidden');
+                
+                // Update winner card
+                document.querySelector('.winner-title').textContent = winner;
+                document.querySelector('.winner-image').style.background = generateGameBackground(winner);
+                
+                // Analyze gamer type based on winner
+                const gamerType = analyzeGamerType(winner);
+                document.getElementById('gamer-type').textContent = gamerType.type;
+                document.getElementById('gamer-description').textContent = gamerType.description;
+                
+                // Update stats
+                document.getElementById('stat-strategy').style.width = `${gamerType.stats.strategy}%`;
+                document.getElementById('stat-action').style.width = `${gamerType.stats.action}%`;
+                document.getElementById('stat-story').style.width = `${gamerType.stats.story}%`;
+                
+                // Create confetti celebration
+                createConfetti();
+            }
+            
+            // Analyze gamer type based on winner
+            function analyzeGamerType(winner) {
+                // Find which category the winner belongs to
+                let winnerCategory = '';
+                for (const [category, games] of Object.entries(gameCategories)) {
+                    if (games.includes(winner)) {
+                        winnerCategory = category;
+                        break;
+                    }
+                }
+                
+                // Map category to gamer type
+                switch (winnerCategory) {
+                    case 'action':
+                        return gamerTypes[0]; // ACTION MASTER
+                    case 'rpg':
+                        return gamerTypes[1]; // ROLE-PLAYING ENTHUSIAST
+                    case 'strategy':
+                        return gamerTypes[2]; // STRATEGIC MASTERMIND
+                    case 'multiplayer':
+                        return gamerTypes[3]; // SOCIAL GAMER
+                    case 'adventure':
+                        return gamerTypes[4]; // ARTISTIC EXPLORER
+                    default:
+                        return gamerTypes[Math.floor(Math.random() * gamerTypes.length)];
+                }
+            }
+            
+            // Create confetti celebration
+            function createConfetti() {
+                const colors = ['#6366f1', '#8b5cf6', '#ec4899', '#3b82f6', '#10b981', '#f59e0b', '#ef4444'];
+                
+                for (let i = 0; i < 100; i++) {
+                    const confetti = document.createElement('div');
+                    confetti.classList.add('confetti');
+                    confetti.style.left = `${Math.random() * 100}%`;
+                    confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.width = `${Math.random() * 10 + 5}px`;
+                    confetti.style.height = `${Math.random() * 10 + 5}px`;
+                    confetti.style.animationDuration = `${Math.random() * 2 + 2}s`;
+                    confetti.style.animationDelay = `${Math.random() * 2}s`;
+                    
+                    document.body.appendChild(confetti);
+                    
+                    // Remove confetti after animation
+                    setTimeout(() => {
+                        confetti.remove();
+                    }, 5000);
+                }
+            }
+            
+            // Restart game
+            function restartGame() {
+                // Reset game state
+                remainingGames = [...games];
+                currentChampion = null;
+                battleCount = 0;
+                
+                // Shuffle games
+                shuffleArray(remainingGames);
+                
+                // Show home screen
+                resultScreen.classList.add('hidden');
+                homeScreen.classList.remove('hidden');
+            }
+            
+            // Share result
+            function shareResult() {
+                const winner = document.querySelector('.winner-title').textContent;
+                const gamerType = document.getElementById('gamer-type').textContent;
+                
+                alert(`My Ultimate PC Game is ${winner} and I'm a ${gamerType}! Play the Ultimate PC Game Battle to discover yours!`);
+            }
+            
+            // Shuffle array (Fisher-Yates algorithm)
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [array[i], array[j]] = [array[j], array[i]];
+                }
+                return array;
+            }
+            
+            // Event listeners
+            startButton.addEventListener('click', function() {
+                shuffleArray(remainingGames);
+                startBattle();
+            });
+            
+            restartButton.addEventListener('click', restartGame);
+            shareButton.addEventListener('click', shareResult);
+            
+            // Add event listeners to choose buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('choose-btn')) {
+                    const index = parseInt(e.target.getAttribute('data-index'));
+                    chooseWinner(index);
+                }
+            });
+            
+            // Initialize
+            createParticles();
+            shuffleArray(remainingGames);
+            
+            // Update total battles
+            totalBattlesEl.textContent = totalBattles;
+        });
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'9623be23e4dd48f5',t:'MTc1MzAyNzk3NC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
